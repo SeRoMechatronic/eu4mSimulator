@@ -1,0 +1,291 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>Contar el n&uacute;mero de dientes de un engranaje</title>
+      <meta name="generator" content="MATLAB 7.6">
+      <meta name="date" content="2009-05-11">
+      <meta name="m-file" content="DiametroInterior"><style>
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h1>Contar el n&uacute;mero de dientes de un engranaje</h1>
+         <introduction></introduction>
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="DiametroInterior.html#1">Cargamos la imagen y la convertimos a escala de gris</a></li>
+               <li><a href="DiametroInterior.html#2">Seleccionamos un umbral y binarizamos la imagen</a></li>
+               <li><a href="DiametroInterior.html#3">Rellenamos los agujeros de los objetos encontrados</a></li>
+               <li><a href="DiametroInterior.html#4">Calculamos la diferencia</a></li>
+               <li><a href="DiametroInterior.html#5">Trazamos el contorno</a></li>
+               <li><a href="DiametroInterior.html#6">Ajustamos los datos del contorno a una circunferencia</a></li>
+               <li><a href="DiametroInterior.html#7">A partir de las caracter&iacute;sticas de las regiones.</a></li>
+            </ul>
+         </div>
+         <h2>Cargamos la imagen y la convertimos a escala de gris<a name="1"></a></h2><pre class="codeinput">img=imread(<span class="string">'176.jpg'</span>);
+img=rgb2gray(img);
+</pre><h2>Seleccionamos un umbral y binarizamos la imagen<a name="2"></a></h2><pre class="codeinput">imhist(img)
+<span class="comment">% Se invierte el resultado para que el objeto quede blanco</span>
+img2=~im2bw(img,100/255);
+imshow(img2);
+</pre><img vspace="5" hspace="5" src="DiametroInterior_01.png"> <h2>Rellenamos los agujeros de los objetos encontrados<a name="3"></a></h2><pre class="codeinput">img3=imfill(img2,<span class="string">'holes'</span>);
+imshow(img3);
+</pre><img vspace="5" hspace="5" src="DiametroInterior_02.png"> <h2>Calculamos la diferencia<a name="4"></a></h2><pre class="codeinput">img4=imabsdiff(img3,img2);
+imshow(img4)
+</pre><img vspace="5" hspace="5" src="DiametroInterior_03.png"> <h2>Trazamos el contorno<a name="5"></a></h2><pre class="codeinput">[B,L] = bwboundaries(img4,<span class="string">'noholes'</span>);
+
+figure; plot(B{1}(:,1),B{1}(:,2));
+</pre><img vspace="5" hspace="5" src="DiametroInterior_04.png"> <h2>Ajustamos los datos del contorno a una circunferencia<a name="6"></a></h2><pre class="codeinput"><span class="comment">% La ecuaci&oacute;n b&aacute;sica de la circunferencia es:</span>
+<span class="comment">% (x-xc)^2 + (y-yc)^2 = r^2,</span>
+<span class="comment">% donde (xc,yc) es el centro y r es el radio.</span>
+<span class="comment">%</span>
+<span class="comment">% Dicha ecuaci&oacute;n puede reescribirse en t&eacute;rminos de tres par&aacute;metros a, b y c:</span>
+<span class="comment">% x^2 + y^2 + a*x + b*y + c = 0,</span>
+<span class="comment">% donde a = -2*xc, b = -2*yc, y c = xc^2 + yc^2 - r^2</span>
+<span class="comment">%</span>
+<span class="comment">% Matricialmente puede escribirse como:</span>
+<span class="comment">% [x y 1] * [a b c]' = -[x^2+y^2]</span>
+<span class="comment">% donde x e y son las coordenadas de cada uno de los puntos del contorno que</span>
+<span class="comment">% queremos aproximar por una circunferencia</span>
+<span class="comment">%</span>
+<span class="comment">% Resolvemos un sistema de ecuaciones para poder calcular el valor de a, b y c</span>
+<span class="comment">% A partir de ellos se calcular&aacute;n las coordenadas del centro y el radio.</span>
+
+x = B{1}(:,2);
+y = B{1}(:,1);
+
+<span class="comment">% Resolvemos el sistema de ecuaciones</span>
+abc = pinv([x y ones(length(x),1)])*(-(x.^2+y.^2));
+a = abc(1); b = abc(2); c = abc(3);
+
+<span class="comment">% calculamos las coordenadas del centro y el radio</span>
+xc=-a/2;
+yc=-b/2;
+r=sqrt((xc^2+yc^2)-c)
+
+<span class="comment">% Marcamos el centro</span>
+imshow(img);
+hold <span class="string">on</span>;
+plot(xc,yc,<span class="string">'rx'</span>,<span class="string">'LineWidth'</span>,2);
+
+<span class="comment">% Dibujamos la circunferencia</span>
+theta = 0:0.01:2*pi;
+
+<span class="comment">% use parametric representation of the circle to obtain coordinates</span>
+<span class="comment">% of points on the circle</span>
+Xfit = r*cos(theta) + xc;
+Yfit = r*sin(theta) + yc;
+
+plot(Xfit, Yfit,<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,2);
+
+resultado = sprintf(<span class="string">'xc:%2.3f yc:%2.3f r:%2.3f pixels'</span>, xc,yc,r);
+text(15,15,resultado,<span class="string">'Color'</span>,<span class="string">'r'</span>,<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>);
+<span class="comment">%hold off;</span>
+</pre><pre class="codeoutput">
+r =
+
+   22.5033
+
+</pre><img vspace="5" hspace="5" src="DiametroInterior_05.png"> <h2>A partir de las caracter&iacute;sticas de las regiones.<a name="7"></a></h2><pre class="codeinput"><span class="comment">% Tambi&eacute;n es posible hacer el c&aacute;lculo a partir de los valores calculados para</span>
+<span class="comment">% las caracter&iacute;sticas de los objetos</span>
+[imgL,numobj]=bwlabel(img4,8);
+
+<span class="comment">% Calculamos las propiedades de las regiones</span>
+propiedades=regionprops(imgL, {<span class="string">'Centroid'</span>, <span class="string">'EquivDiameter'</span>});
+
+xc=propiedades(1).Centroid(1);
+yc=propiedades(1).Centroid(2);
+r=propiedades(1).EquivDiameter/2;
+
+<span class="comment">% Marcamos el centro</span>
+<span class="comment">%imshow(img);</span>
+<span class="comment">%hold on;</span>
+plot(xc,yc,<span class="string">'gs'</span>,<span class="string">'LineWidth'</span>,2);
+
+<span class="comment">% use parametric representation of the circle to obtain coordinates</span>
+<span class="comment">% of points on the circle</span>
+Xfit = r*cos(theta) + xc;
+Yfit = r*sin(theta) + yc;
+
+plot(Xfit, Yfit,<span class="string">'g'</span>,<span class="string">'LineWidth'</span>,2);
+
+resultado = sprintf(<span class="string">'xc:%2.3f yc:%2.3f r:%2.3f pixels'</span>, xc,yc,r);
+text(15, size(img,1)-15,resultado,<span class="string">'Color'</span>,<span class="string">'g'</span>,<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>);
+<span class="comment">%hold off;</span>
+</pre><img vspace="5" hspace="5" src="DiametroInterior_06.png"> <p class="footer"><br>
+            Published with MATLAB&reg; 7.6<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% Contar el número de dientes de un engranaje
+
+
+%% Cargamos la imagen y la convertimos a escala de gris
+img=imread('176.jpg');
+img=rgb2gray(img);
+
+%% Seleccionamos un umbral y binarizamos la imagen
+imhist(img)
+% Se invierte el resultado para que el objeto quede blanco
+img2=~im2bw(img,100/255);
+imshow(img2);
+
+%% Rellenamos los agujeros de los objetos encontrados
+img3=imfill(img2,'holes');
+imshow(img3);
+
+%% Calculamos la diferencia
+img4=imabsdiff(img3,img2);
+imshow(img4)
+
+%% Trazamos el contorno
+[B,L] = bwboundaries(img4,'noholes');
+
+figure; plot(B{1}(:,1),B{1}(:,2));
+
+%% Ajustamos los datos del contorno a una circunferencia
+
+% La ecuación básica de la circunferencia es:
+% (x-xc)^2 + (y-yc)^2 = r^2, 
+% donde (xc,yc) es el centro y r es el radio.
+%
+% Dicha ecuación puede reescribirse en términos de tres parámetros a, b y c:
+% x^2 + y^2 + a*x + b*y + c = 0,  
+% donde a = -2*xc, b = -2*yc, y c = xc^2 + yc^2 - r^2
+%
+% Matricialmente puede escribirse como:
+% [x y 1] * [a b c]' = -[x^2+y^2]
+% donde x e y son las coordenadas de cada uno de los puntos del contorno que
+% queremos aproximar por una circunferencia
+%
+% Resolvemos un sistema de ecuaciones para poder calcular el valor de a, b y c
+% A partir de ellos se calcularán las coordenadas del centro y el radio.
+
+x = B{1}(:,2);
+y = B{1}(:,1);
+
+% Resolvemos el sistema de ecuaciones
+abc = pinv([x y ones(length(x),1)])*(-(x.^2+y.^2));
+a = abc(1); b = abc(2); c = abc(3);
+
+% calculamos las coordenadas del centro y el radio
+xc=-a/2;
+yc=-b/2;
+r=sqrt((xc^2+yc^2)-c)
+
+% Marcamos el centro
+imshow(img);
+hold on;
+plot(xc,yc,'rx','LineWidth',2);
+
+% Dibujamos la circunferencia
+theta = 0:0.01:2*pi;
+
+% use parametric representation of the circle to obtain coordinates
+% of points on the circle
+Xfit = r*cos(theta) + xc;
+Yfit = r*sin(theta) + yc;
+
+plot(Xfit, Yfit,'r','LineWidth',2);
+
+resultado = sprintf('xc:%2.3f yc:%2.3f r:%2.3f pixels', xc,yc,r);
+text(15,15,resultado,'Color','r','FontWeight','bold');
+%hold off;
+
+%% A partir de las características de las regiones.
+
+% También es posible hacer el cálculo a partir de los valores calculados para
+% las características de los objetos
+[imgL,numobj]=bwlabel(img4,8);
+
+% Calculamos las propiedades de las regiones
+propiedades=regionprops(imgL, {'Centroid', 'EquivDiameter'});
+
+xc=propiedades(1).Centroid(1);
+yc=propiedades(1).Centroid(2);
+r=propiedades(1).EquivDiameter/2;
+
+% Marcamos el centro
+%imshow(img);
+%hold on;
+plot(xc,yc,'gs','LineWidth',2);
+
+% use parametric representation of the circle to obtain coordinates
+% of points on the circle
+Xfit = r*cos(theta) + xc;
+Yfit = r*sin(theta) + yc;
+
+plot(Xfit, Yfit,'g','LineWidth',2);
+
+resultado = sprintf('xc:%2.3f yc:%2.3f r:%2.3f pixels', xc,yc,r);
+text(15, size(img,1)-15,resultado,'Color','g','FontWeight','bold');
+%hold off;
+
+
+##### SOURCE END #####
+-->
+   </body>
+</html>

@@ -1,0 +1,161 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>Segmentacion_Contornos</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-05-24"><meta name="m-file" content="Segmentacion_Contornos"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="Segmentacion_Contornos.html#1">leer la imagen</a></li><li><a href="Segmentacion_Contornos.html#2">Obtenemos el threshold en el calculo de los contornos</a></li><li><a href="Segmentacion_Contornos.html#3">Reducimos el nivel de umbral y repetimos el calculo</a></li><li><a href="Segmentacion_Contornos.html#4">Definimos los elementos estructurales para limpiar la imagen</a></li></ul></div><h2>leer la imagen<a name="1"></a></h2><pre class="codeinput">I=imread(<span class="string">'Tuto_1.bmp'</span>);
+figure; imshow(I); title(<span class="string">'imagen original'</span>)
+</pre><img vspace="5" hspace="5" src="Segmentacion_Contornos_01.png" alt=""> <h2>Obtenemos el threshold en el calculo de los contornos<a name="2"></a></h2><pre class="codeinput">[Iedge, threshold] = edge(I, <span class="string">'sobel'</span>);
+
+figure; imshow(Iedge); title(<span class="string">'contornos'</span>)
+</pre><img vspace="5" hspace="5" src="Segmentacion_Contornos_02.png" alt=""> <h2>Reducimos el nivel de umbral y repetimos el calculo<a name="3"></a></h2><pre class="codeinput">Iedge2 = edge(I,<span class="string">'sobel'</span>, threshold * 0.75);
+
+figure; imshow(Iedge2); title(<span class="string">'contornos reduciendo thres el 75%'</span>)
+</pre><img vspace="5" hspace="5" src="Segmentacion_Contornos_03.png" alt=""> <h2>Definimos los elementos estructurales para limpiar la imagen<a name="4"></a></h2><pre class="codeinput">BW=Iedge2;
+
+<span class="comment">% Una linea vertical de 3 pixels</span>
+se90 = strel(<span class="string">'line'</span>, 3, 90);
+
+<span class="comment">% Una linea horizontal de 3 pixels</span>
+se0 = strel(<span class="string">'line'</span>, 3, 0);
+</pre><p>Hacemos una dilaticion</p><pre class="codeinput">BWdilate = imdilate(BW, [se90 se0]);
+figure; imshow(BWdilate); title(<span class="string">'imagen dilatada'</span>)
+</pre><img vspace="5" hspace="5" src="Segmentacion_Contornos_04.png" alt=""> <p>Limpiamos el borde de la imagen</p><pre class="codeinput">BWnobord = imclearborder(BWdilate, 4);
+figure; imshow(BWnobord); title(<span class="string">'limpiar el borde'</span>)
+</pre><img vspace="5" hspace="5" src="Segmentacion_Contornos_05.png" alt=""> <p>Eliminamos elementos menores de 200 pixels</p><pre class="codeinput">BWopen = bwareaopen(BWnobord,200);
+figure; imshow(BWopen); title(<span class="string">'eliminar objetos peque&ntilde;os'</span>)
+</pre><img vspace="5" hspace="5" src="Segmentacion_Contornos_06.png" alt=""> <p>Aplicamos un cierre</p><pre class="codeinput">BWclose = bwmorph(BWopen,<span class="string">'close'</span>);
+figure; imshow(BWclose); title(<span class="string">'aplicar un cierre'</span>)
+</pre><img vspace="5" hspace="5" src="Segmentacion_Contornos_07.png" alt=""> <p>Rellenamos los huecos</p><pre class="codeinput">BWfill = imfill(BWclose, <span class="string">'holes'</span>);
+figure; imshow(BWclose); title(<span class="string">'rellenar huecos'</span>);
+</pre><img vspace="5" hspace="5" src="Segmentacion_Contornos_08.png" alt=""> <p>Nos quedamos con el perimetro de los objetos</p><pre class="codeinput">BWoutline = bwperim(BWfill);
+imshow(BWoutline)
+figure; imshow(BWoutline); title(<span class="string">'quedarnos con el perimetro'</span>)
+</pre><img vspace="5" hspace="5" src="Segmentacion_Contornos_09.png" alt=""> <img vspace="5" hspace="5" src="Segmentacion_Contornos_10.png" alt=""> <p>Sobre la imagen original superponemos el perimetro</p><pre class="codeinput">segmentedCells = I;
+segmentedCells(BWoutline) = 255;
+
+figure; imshow(segmentedCells); title(<span class="string">'resultado final'</span>)
+</pre><img vspace="5" hspace="5" src="Segmentacion_Contornos_11.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+%% leer la imagen
+I=imread('Tuto_1.bmp');
+figure; imshow(I); title('imagen original')
+
+%% Obtenemos el threshold en el calculo de los contornos
+[Iedge, threshold] = edge(I, 'sobel');
+
+figure; imshow(Iedge); title('contornos')
+
+%% Reducimos el nivel de umbral y repetimos el calculo
+Iedge2 = edge(I,'sobel', threshold * 0.75);
+
+figure; imshow(Iedge2); title('contornos reduciendo thres el 75%')
+
+%% Definimos los elementos estructurales para limpiar la imagen
+BW=Iedge2;
+
+% Una linea vertical de 3 pixels
+se90 = strel('line', 3, 90);
+
+% Una linea horizontal de 3 pixels
+se0 = strel('line', 3, 0);
+
+%%
+% Hacemos una dilaticion
+BWdilate = imdilate(BW, [se90 se0]);
+figure; imshow(BWdilate); title('imagen dilatada')
+
+%%
+% Limpiamos el borde de la imagen
+BWnobord = imclearborder(BWdilate, 4);
+figure; imshow(BWnobord); title('limpiar el borde')
+
+%%
+% Eliminamos elementos menores de 200 pixels
+BWopen = bwareaopen(BWnobord,200);
+figure; imshow(BWopen); title('eliminar objetos pequeños')
+
+%%
+% Aplicamos un cierre
+BWclose = bwmorph(BWopen,'close');
+figure; imshow(BWclose); title('aplicar un cierre')
+
+%%
+% Rellenamos los huecos
+BWfill = imfill(BWclose, 'holes');
+figure; imshow(BWclose); title('rellenar huecos');
+
+%%
+% Nos quedamos con el perimetro de los objetos
+BWoutline = bwperim(BWfill);
+imshow(BWoutline)
+figure; imshow(BWoutline); title('quedarnos con el perimetro')
+
+%%
+% Sobre la imagen original superponemos el perimetro
+segmentedCells = I;
+segmentedCells(BWoutline) = 255;
+
+figure; imshow(segmentedCells); title('resultado final')
+##### SOURCE END #####
+--></body></html>

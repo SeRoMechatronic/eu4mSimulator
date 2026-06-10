@@ -1,0 +1,327 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>segmentacion_watershed</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-05-24"><meta name="m-file" content="segmentacion_watershed"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="segmentacion_watershed.html#1">Segmentacion Watershed usando marcadores</a></li><li><a href="segmentacion_watershed.html#2">Usar la magnitud del gradiente como funcion de segmentacion</a></li><li><a href="segmentacion_watershed.html#3">Aplicamos el algoritmo de segmentacion directamente a la imagen</a></li><li><a href="segmentacion_watershed.html#4">Marcamos los objetos de interes</a></li><li><a href="segmentacion_watershed.html#10">Calculo de los marcadores del fondo</a></li><li><a href="segmentacion_watershed.html#12">Calcular la transformada watershed</a></li><li><a href="segmentacion_watershed.html#13">Visualizar el resultado</a></li></ul></div><h2>Segmentacion Watershed usando marcadores<a name="1"></a></h2><p>1. Calcular una funcion de segmentacion. Es una imagen cuyas regiones oscuras son los objetos que tratamos de identificar</p><p>2. Calcular los marcadores de los objetos. Son peque&ntilde;as zonas conexas dentro de cada objeto.</p><p>3. Calcular los marcadores del fondo. Son pixels que no pertenecen a ning&uacute;n objeto</p><p>4. Modificar la funcion de segmentacion para que son tenga minimos en los marcadores de fondo y objeto.</p><p>5. Calcular la transformada watershed</p><pre class="codeinput"><span class="comment">% Leer la imagen</span>
+
+I = imread(<span class="string">'Tuto_1.bmp'</span>);
+figure; imshow(I); title(<span class="string">'Imagen original'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_01.png" alt=""> <h2>Usar la magnitud del gradiente como funcion de segmentacion<a name="2"></a></h2><pre class="codeinput"><span class="comment">% kernel del filtro de soble para detectar contorno horizontales</span>
+hy = fspecial(<span class="string">'sobel'</span>);
+<span class="comment">% kernel para contornos verticales</span>
+hx = hy';
+<span class="comment">% filtramos la imagen</span>
+Iy = imfilter(double(I), hy, <span class="string">'replicate'</span>); <span class="comment">% filtramos la imagen</span>
+Ix = imfilter(double(I), hx, <span class="string">'replicate'</span>);
+<span class="comment">% calculamos la magnitud del gradiente</span>
+gradmag = sqrt(Ix.^2 + Iy.^2);
+figure, imshow(gradmag,[]), title(<span class="string">'Magnitud del gradiente'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_02.png" alt=""> <h2>Aplicamos el algoritmo de segmentacion directamente a la imagen<a name="3"></a></h2><pre class="codeinput">L = watershed(gradmag);
+<span class="comment">% pasamos de etiquetas a falso color</span>
+Lrgb = label2rgb(L);
+figure, imshow(Lrgb), title(<span class="string">'Transformada watershed sobre la imagen del gradiente'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_03.png" alt=""> <h2>Marcamos los objetos de interes<a name="4"></a></h2><p>Se pueden aplicar muchos procedimientos. En este caso utilizaremos t&eacute;cnicas basadas en filtros morfologicos. El objetivo es crear zonas planas de maximos dentro de cada objeto para que puedan ser facilmente localizados.</p><p>Aplicamos el filtro de apertura a la imagen original</p><pre class="codeinput">se = strel(<span class="string">'disk'</span>, 20);
+Io = imopen(I, se);
+figure, imshow(Io), title(<span class="string">'Apertura'</span>)
+
+
+<span class="comment">% Aplicamos un filtro de erosion</span>
+Ie = imerode(I, se);
+
+<span class="comment">% aplicamos un filtro morfologico de reconstruccion. Mediante sucesivas</span>
+<span class="comment">% dilataciones de la imagen erosionada</span>
+Iobr = imreconstruct(Ie, I);
+figure, imshow(Iobr), title(<span class="string">'Apertura por reconstruccion'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_04.png" alt=""> <img vspace="5" hspace="5" src="segmentacion_watershed_05.png" alt=""> <p>Aplicamos una operacion de cierre sobre la imagen en la que habiamos practicado la apertura</p><pre class="codeinput">Ioc = imclose(Io, se);
+figure, imshow(Ioc), title(<span class="string">'Apertura y cierre de la imagen'</span>)
+
+<span class="comment">% Comparamos el resultado con la aplicacion de un filtro de reconstruccion</span>
+<span class="comment">% dilatamos la imagen abierta por reconstruccion</span>
+Iobrd = imdilate(Iobr, se);
+<span class="comment">% aplicamos el filtro de reconstruccion. Observese que trabajamos con el</span>
+<span class="comment">% complemento del imagen</span>
+Iobrcbr = imreconstruct(imcomplement(Iobrd), imcomplement(Iobr));
+<span class="comment">% complementamos de nuevo el resultado anterior para volver a la escala</span>
+<span class="comment">% original</span>
+Iobrcbr = imcomplement(Iobrcbr);
+
+figure, imshow(Iobrcbr), title(<span class="string">'Apertura y cierre por reconstruccion'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_06.png" alt=""> <img vspace="5" hspace="5" src="segmentacion_watershed_07.png" alt=""> <p>El segundo procedimiento es m&aacute;s efectivo para eliminar peque&ntilde;os defectos sin alterar la forma de los objetos. El siguiente paso es calcular los maximos regionales, con lo que tendremos los marcadores de los objetos</p><pre class="codeinput">fgm = imregionalmax(Iobrcbr);
+figure, imshow(fgm), title(<span class="string">'Marcadores obtenidos para los objetos'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_08.png" alt=""> <p>Superponemos los marcadores a la imagen original para interpretar el resultado (observese que fmg es una imagen binaria)</p><pre class="codeinput">I2 = I;
+I2(fgm) = 255;
+figure, imshow(I2), title(<span class="string">'marcadores sobre la imagen inicial'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_09.png" alt=""> <p>Algunos marcadores llegan hasta el contorno del objeto. Aplicamos un filtro de cierre y uno de erosion para evitar este problema</p><pre class="codeinput">se2 = strel(ones(5,5));
+fgm2 = imclose(fgm, se2);
+fgm3 = imerode(fgm2, se2);
+
+<span class="comment">% Como pueden quedar pixels sueltos, eliminamos aquellos bloques que no</span>
+<span class="comment">% alcancen un area minima, en el ejemplo 20 pixels</span>
+fgm4 = bwareaopen(fgm3, 20);
+I3 = I;
+I3(fgm4) = 255;
+figure, imshow(I3); title(<span class="string">'Marcadores modificados sobre la imagen original'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_10.png" alt=""> <h2>Calculo de los marcadores del fondo<a name="10"></a></h2><p>En la imagen obtenida tras la apertura y cierre por reconstruccion, los pixels mas oscuros pertenecen al fondo, asi que empezamos directamente con dicha imagen</p><pre class="codeinput"><span class="comment">% hacemos una binarizacion</span>
+bw = im2bw(Iobrcbr, graythresh(Iobrcbr));
+figure, imshow(Iobrcbr), title(<span class="string">'Imagen reconstruida'</span>);
+figure, imshow(bw), title(<span class="string">'Binarizacion de la imagen reconstruida'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_11.png" alt=""> <img vspace="5" hspace="5" src="segmentacion_watershed_12.png" alt=""> <p>No interesa que los marcadores del fondo puedan tocar los contornos de los objetos. Como estos marcadores nos interesa que sean muy finos, calcuremos la transformacion de distancia, aplicaremos la transformacion watershed a dicho resultado y nos quedaremos con las divisorias</p><pre class="codeinput">D = bwdist(bw);
+DL = watershed(D);
+bgm = DL == 0;
+figure, imshow(D), title(<span class="string">'transformada de distancia'</span>)
+figure, imshow(DL), title(<span class="string">'resultado de aplicar watershed'</span>)
+figure, imshow(bgm), title(<span class="string">'puntos usados como marcadores del fondo'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_13.png" alt=""> <img vspace="5" hspace="5" src="segmentacion_watershed_14.png" alt=""> <img vspace="5" hspace="5" src="segmentacion_watershed_15.png" alt=""> <h2>Calcular la transformada watershed<a name="12"></a></h2><p>Imponenmos valores minimos en las zonas de la imagen de gradientes correspondientes a los marcadores. Observese que al ser estos imagenes binarias, usamos el operador o-logico para hacer la suma.</p><pre class="codeinput">gradmag2 = imimposemin(gradmag, bgm | fgm4);
+figure, imshow(gradmag2), title(<span class="string">'gradiente con los marcadores'</span>)
+
+<span class="comment">% Hacemos la segmentacion</span>
+
+L = watershed(gradmag2);
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_16.png" alt=""> <h2>Visualizar el resultado<a name="13"></a></h2><p>Las froteras de los objetos se corresponden con los valores de L==0. Superponemos a la imagen original los marcadores y las lineas divisorias dilatadas para facilitar su visualizacion</p><pre class="codeinput">I4 = I;
+I4(imdilate(L == 0, ones(3, 3)) | bgm | fgm4) = 255;
+figure, imshow(I4), title(<span class="string">'marcadores y divisorias sobre la imagen original'</span>);
+
+<span class="comment">% visualizacion de las etiquetas en falso color</span>
+
+Lrgb = label2rgb(L, <span class="string">'jet'</span>, <span class="string">'w'</span>, <span class="string">'shuffle'</span>);
+figure, imshow(Lrgb), title(<span class="string">'Etiquetas en falso color'</span>)
+
+<span class="comment">% Superposicion de ambas imagenes usando transparencias</span>
+figure, imshow(I), hold <span class="string">on</span>
+himage = imshow(Lrgb);
+set(himage, <span class="string">'AlphaData'</span>, 0.3);
+title(<span class="string">'Supeposicion de las etiquetas sobre la imagen original'</span>)
+</pre><img vspace="5" hspace="5" src="segmentacion_watershed_17.png" alt=""> <img vspace="5" hspace="5" src="segmentacion_watershed_18.png" alt=""> <img vspace="5" hspace="5" src="segmentacion_watershed_19.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Segmentacion Watershed usando marcadores
+% 1. Calcular una funcion de segmentacion. Es una imagen cuyas regiones
+% oscuras son los objetos que tratamos de identificar
+%
+% 2. Calcular los marcadores de los objetos. Son pequeñas zonas conexas
+% dentro de cada objeto.
+%
+% 3. Calcular los marcadores del fondo. Son pixels que no pertenecen a
+% ningún objeto
+%
+% 4. Modificar la funcion de segmentacion para que son tenga minimos en los
+% marcadores de fondo y objeto.
+% 
+% 5. Calcular la transformada watershed
+%
+
+
+% Leer la imagen
+
+I = imread('Tuto_1.bmp');
+figure; imshow(I); title('Imagen original')
+
+%% Usar la magnitud del gradiente como funcion de segmentacion
+
+% kernel del filtro de soble para detectar contorno horizontales
+hy = fspecial('sobel');
+% kernel para contornos verticales
+hx = hy';
+% filtramos la imagen
+Iy = imfilter(double(I), hy, 'replicate'); % filtramos la imagen
+Ix = imfilter(double(I), hx, 'replicate');
+% calculamos la magnitud del gradiente
+gradmag = sqrt(Ix.^2 + Iy.^2);
+figure, imshow(gradmag,[]), title('Magnitud del gradiente')
+
+%% Aplicamos el algoritmo de segmentacion directamente a la imagen
+
+L = watershed(gradmag);
+% pasamos de etiquetas a falso color
+Lrgb = label2rgb(L);
+figure, imshow(Lrgb), title('Transformada watershed sobre la imagen del gradiente')
+
+
+%% Marcamos los objetos de interes
+% Se pueden aplicar muchos procedimientos.
+% En este caso utilizaremos técnicas basadas en filtros morfologicos.
+% El objetivo es crear zonas planas de maximos dentro de cada objeto para
+% que puedan ser facilmente localizados.
+
+%%
+% Aplicamos el filtro de apertura a la imagen original
+
+se = strel('disk', 20);
+Io = imopen(I, se);
+figure, imshow(Io), title('Apertura')
+
+
+% Aplicamos un filtro de erosion
+Ie = imerode(I, se);
+
+% aplicamos un filtro morfologico de reconstruccion. Mediante sucesivas
+% dilataciones de la imagen erosionada
+Iobr = imreconstruct(Ie, I);
+figure, imshow(Iobr), title('Apertura por reconstruccion')
+
+%%
+% Aplicamos una operacion de cierre sobre la imagen en la que habiamos 
+% practicado la apertura
+
+Ioc = imclose(Io, se);
+figure, imshow(Ioc), title('Apertura y cierre de la imagen')
+
+% Comparamos el resultado con la aplicacion de un filtro de reconstruccion
+% dilatamos la imagen abierta por reconstruccion
+Iobrd = imdilate(Iobr, se);
+% aplicamos el filtro de reconstruccion. Observese que trabajamos con el 
+% complemento del imagen
+Iobrcbr = imreconstruct(imcomplement(Iobrd), imcomplement(Iobr));
+% complementamos de nuevo el resultado anterior para volver a la escala
+% original
+Iobrcbr = imcomplement(Iobrcbr);
+
+figure, imshow(Iobrcbr), title('Apertura y cierre por reconstruccion')
+
+%%
+% El segundo procedimiento es más efectivo para eliminar pequeños defectos
+% sin alterar la forma de los objetos. El siguiente paso es calcular los
+% maximos regionales, con lo que tendremos los marcadores de los objetos
+
+fgm = imregionalmax(Iobrcbr);
+figure, imshow(fgm), title('Marcadores obtenidos para los objetos')
+
+%%
+% Superponemos los marcadores a la imagen original para interpretar el
+% resultado (observese que fmg es una imagen binaria)
+I2 = I;
+I2(fgm) = 255;
+figure, imshow(I2), title('marcadores sobre la imagen inicial')
+
+%%
+% Algunos marcadores llegan hasta el contorno del objeto. Aplicamos un
+% filtro de cierre y uno de erosion para evitar este problema
+se2 = strel(ones(5,5));
+fgm2 = imclose(fgm, se2);
+fgm3 = imerode(fgm2, se2);
+
+% Como pueden quedar pixels sueltos, eliminamos aquellos bloques que no
+% alcancen un area minima, en el ejemplo 20 pixels
+fgm4 = bwareaopen(fgm3, 20);
+I3 = I;
+I3(fgm4) = 255;
+figure, imshow(I3); title('Marcadores modificados sobre la imagen original')
+
+%% Calculo de los marcadores del fondo
+% En la imagen obtenida tras la apertura y cierre por reconstruccion, los
+% pixels mas oscuros pertenecen al fondo, asi que empezamos directamente
+% con dicha imagen
+
+% hacemos una binarizacion
+bw = im2bw(Iobrcbr, graythresh(Iobrcbr));
+figure, imshow(Iobrcbr), title('Imagen reconstruida');
+figure, imshow(bw), title('Binarizacion de la imagen reconstruida')
+
+%%
+% No interesa que los marcadores del fondo puedan tocar los contornos de
+% los objetos. Como estos marcadores nos interesa que sean muy finos,
+% calcuremos la transformacion de distancia, aplicaremos la transformacion
+% watershed a dicho resultado y nos quedaremos con las divisorias
+
+D = bwdist(bw);
+DL = watershed(D);
+bgm = DL == 0;
+figure, imshow(D), title('transformada de distancia')
+figure, imshow(DL), title('resultado de aplicar watershed')
+figure, imshow(bgm), title('puntos usados como marcadores del fondo')
+
+%% Calcular la transformada watershed
+% Imponenmos valores minimos en las zonas de la imagen de gradientes
+% correspondientes a los marcadores. Observese que al ser estos imagenes
+% binarias, usamos el operador o-logico para hacer la suma.
+gradmag2 = imimposemin(gradmag, bgm | fgm4);
+figure, imshow(gradmag2), title('gradiente con los marcadores')
+
+% Hacemos la segmentacion
+
+L = watershed(gradmag2);
+
+%% Visualizar el resultado
+% Las froteras de los objetos se corresponden con los valores de L==0.
+% Superponemos a la imagen original los marcadores y las lineas divisorias
+% dilatadas para facilitar su visualizacion
+
+I4 = I;
+I4(imdilate(L == 0, ones(3, 3)) | bgm | fgm4) = 255;
+figure, imshow(I4), title('marcadores y divisorias sobre la imagen original');
+
+% visualizacion de las etiquetas en falso color
+
+Lrgb = label2rgb(L, 'jet', 'w', 'shuffle');
+figure, imshow(Lrgb), title('Etiquetas en falso color')
+
+% Superposicion de ambas imagenes usando transparencias
+figure, imshow(I), hold on
+himage = imshow(Lrgb);
+set(himage, 'AlphaData', 0.3);
+title('Supeposicion de las etiquetas sobre la imagen original')
+
+
+
+##### SOURCE END #####
+--></body></html>

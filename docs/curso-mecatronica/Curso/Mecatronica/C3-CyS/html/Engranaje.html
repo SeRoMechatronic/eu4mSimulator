@@ -1,0 +1,158 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>Contar el n&uacute;mero de dientes de un engranaje</title>
+      <meta name="generator" content="MATLAB 7.6">
+      <meta name="date" content="2009-05-07">
+      <meta name="m-file" content="Engranaje"><style>
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h1>Contar el n&uacute;mero de dientes de un engranaje</h1>
+         <introduction></introduction>
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="Engranaje.html#1">Cargamos la imagen y la convertimos a escala de gris</a></li>
+               <li><a href="Engranaje.html#2">Seleccionamos un umbral y binarizamos la imagen</a></li>
+               <li><a href="Engranaje.html#3">Aplicamos una operaci&oacute;n de cierre</a></li>
+               <li><a href="Engranaje.html#4">Calculamos la diferencia</a></li>
+               <li><a href="Engranaje.html#5">Aplicamos una operaci&oacute;n de apertura</a></li>
+               <li><a href="Engranaje.html#6">Etiquetamos los objetos encontrados</a></li>
+            </ul>
+         </div>
+         <h2>Cargamos la imagen y la convertimos a escala de gris<a name="1"></a></h2><pre class="codeinput">img=imread(<span class="string">'176.jpg'</span>);
+img=rgb2gray(img);
+</pre><h2>Seleccionamos un umbral y binarizamos la imagen<a name="2"></a></h2><pre class="codeinput">imhist(img)
+<span class="comment">% Se invierte el resultado para que el objeto quede blanco</span>
+img2=~im2bw(img,100/255);
+imshow(img2);
+</pre><img vspace="5" hspace="5" src="Engranaje_01.png"> <h2>Aplicamos una operaci&oacute;n de cierre<a name="3"></a></h2><pre class="codeinput"><span class="comment">% El objetivo es eliminar los huecos entre los dientes</span>
+img3=imclose(img2,strel(<span class="string">'disk'</span>,20));
+imshow(img3);
+</pre><img vspace="5" hspace="5" src="Engranaje_02.png"> <h2>Calculamos la diferencia<a name="4"></a></h2><pre class="codeinput"><span class="comment">% Al restar la imagen obtenida tras la operaci&oacute;n de cierre de la imagen</span>
+<span class="comment">% binarizada inicial, nos quedamos con una imagen de los "huecos" entre los</span>
+<span class="comment">% dientes.</span>
+img4=imsubtract(img3,img2);
+
+imshow(img4);
+</pre><img vspace="5" hspace="5" src="Engranaje_03.png"> <h2>Aplicamos una operaci&oacute;n de apertura<a name="5"></a></h2><pre class="codeinput"><span class="comment">% El objetivo es eliminar los peque&ntilde;os objetos que aparecen en la zona</span>
+<span class="comment">% del eje del engranaje</span>
+img4=imopen(img4,strel(<span class="string">'disk'</span>,3));
+imshow(img4)
+</pre><img vspace="5" hspace="5" src="Engranaje_04.png"> <h2>Etiquetamos los objetos encontrados<a name="6"></a></h2><pre class="codeinput">[imgL,numobj]=bwlabel(img4,8);
+
+disp(sprintf(<span class="string">'Hay %d dientes'</span>, numobj))
+</pre><pre class="codeoutput">Hay 21 dientes
+</pre><p class="footer"><br>
+            Published with MATLAB&reg; 7.6<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% Contar el número de dientes de un engranaje
+
+
+%% Cargamos la imagen y la convertimos a escala de gris
+img=imread('176.jpg');
+img=rgb2gray(img);
+
+%% Seleccionamos un umbral y binarizamos la imagen
+imhist(img)
+% Se invierte el resultado para que el objeto quede blanco
+img2=~im2bw(img,100/255);
+imshow(img2);
+
+%% Aplicamos una operación de cierre
+
+% El objetivo es eliminar los huecos entre los dientes
+img3=imclose(img2,strel('disk',20));
+imshow(img3);
+
+%% Calculamos la diferencia
+
+% Al restar la imagen obtenida tras la operación de cierre de la imagen
+% binarizada inicial, nos quedamos con una imagen de los "huecos" entre los
+% dientes.
+img4=imsubtract(img3,img2);
+
+imshow(img4);
+
+%% Aplicamos una operación de apertura
+
+% El objetivo es eliminar los pequeños objetos que aparecen en la zona
+% del eje del engranaje
+img4=imopen(img4,strel('disk',3));
+imshow(img4)
+
+%% Etiquetamos los objetos encontrados
+
+[imgL,numobj]=bwlabel(img4,8);
+
+disp(sprintf('Hay %d dientes', numobj))
+##### SOURCE END #####
+-->
+   </body>
+</html>

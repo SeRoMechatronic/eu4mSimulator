@@ -1,0 +1,384 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>DESARROLLO DE UN PROTOTIPO MECATRÓNICO: PROGRAMACIÓN</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	 <meta http-equiv="Pragma" content="no-cache" />
+	 <meta http-equiv="Expires" content="0" />
+    <link href="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/estilo.css" type="text/css" rel="stylesheet">
+    <meta content="MSHTML 6.00.2600.0" name="GENERATOR">
+    <script language="JavaScript">
+// change this to where you store the blank.gif image
+var blank = "/~ialvarez/Curso/index_archivos/blank.gif";
+topedge = 570; // location of news box from top of page
+leftedge = 30; // location of news box from left edge
+boxheight = 165; // height of news box
+boxwidth = 140; // width of news box
+scrollheight = 165; // total height of all data to be scrolled
+function scrollnews(cliptop) {
+if (document.layers) {
+newsDiv = document.news;
+newsDiv.clip.top = cliptop;
+newsDiv.clip.bottom = cliptop + boxheight;
+newsDiv.clip.left = 0;
+newsDiv.clip.right = boxwidth + leftedge;
+newsDiv.left = leftedge;
+newsDiv.top = topedge - cliptop;
+}
+else {
+newsDiv = news.style;
+newsDiv.clip = "rect(" + cliptop + "px " + (boxwidth + leftedge) + "px " + (cliptop + boxheight) + "px 0px)";
+newsDiv.pixelLeft = leftedge;
+newsDiv.pixelTop = topedge - cliptop;
+}
+cliptop = (cliptop + 1) % (scrollheight + boxheight);
+newsDiv.visibility='visible';
+setTimeout("scrollnews(" + cliptop + ")", 50);
+}
+// End -->
+  </script>
+
+</head>
+<body leftmargin="8" topmargin="0" background="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/fondo_new.jpg"
+    bgcolor="#ffffff" marginheight="0" marginwidth="8" text="#000000">
+    <table border="0" cellpadding="0" cellspacing="0" width="900" margin="0" padding="0">
+        <tbody>
+            <tr>
+                <td colspan="2" width="900">
+                                       <!-- TABLA CABECERAS  --->
+                    <table border="0" cellpadding="0" cellspacing="0" width="900">
+                        <tbody>
+                            <tr align="center" bgcolor="#81996f" height="70">
+                                <td width="89">
+                                    <a href="http://www.uniovi.es/">
+                                        <img alt="Universidad de Oviedo" src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/logo-uniovi.jpg" border="0"
+                                            height="81" width="86"></a>
+                                </td>
+                                <td width="545">
+                                    <a href="http://www.dieecs.uniovi.es">
+                                        <img alt="Dpto. de Ingeniería Eléctrica" src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/logo-dpto.gif" border="0"
+                                            height="88" width="732"></a>
+                                </td>
+                                <td width="127">
+                                    <a href="http://isa.uniovi.es">
+                                        <img alt="Area Ing. de Sistemas y Automártica" src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/isanegro.gif"
+                                            border="0" height="82" width="124"></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+						  <p>
+						  </p>
+
+                    <!--  FIN DE  LAS CABECERAS  -->
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" width="212">
+                    <div align="center">
+                        
+        <table align="center" border="1" bordercolor="#ffffff" cellpadding="10" cellspacing="0"
+            width="211">
+            <tbody>
+                <tr>
+                    <td>
+                        <div align="center">
+                            <table align="center" border="1" bordercolor="#0b737e" cellpadding="1" cellspacing="0"
+                                width="180">
+                                <tbody>
+                                    <tr>
+                                        <td bgcolor="#0b737e">
+                                            <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><b><font color="#ebfef4">
+                                                IGNACIO ALVAREZ</font></b></font><font face="Verdana, Arial, Helvetica, sans-serif"
+                                                    size="2"></font>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="http://isa.uniovi.es/~ialvarez/Curso/index.shtml">Página
+                                                    Principal</a></font></div>
+                                        </td>
+                                    </tr>
+                                    <tr align="center">
+                                        <td>
+                                            <a href="http://isa.uniovi.es">
+                                                <img src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/link_to_isa.gif" border="0" height="71" width="139"></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>
+                                &nbsp;</p>
+                            <table align="center" border="1" bordercolor="#0b737e" cellpadding="1" cellspacing="0"
+                                width="180">
+                                <tbody>
+                                    <tr>
+                                        <td bgcolor="#0b737e">
+                                            <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><b><font color="#ebfef4">
+                                                MASTER EN MECATRONICA</font></b></font>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="index.shtml.html">Principal</a></font></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="../C1-CyP/index.shtml.html">Computadores y Programación</a></font></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="index.shtml.html">Diseño de un Prototipo Mecatrónico</a></font></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="../C3-ISC/index.shtml.html">Implementación de Sistemas de Control</a></font></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="../C3-CyS/index.shtml.html">Conferencias y Seminarios III</a></font></div>
+                                        </td>
+                                    </tr>                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <a href="http://mim.dieecs.com">
+                                                    <img style="border: 0px solid; width: 52px; height: 63px;" alt="" src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/mim.jpg"></a> <a href="http://www.uniovi.es/mecatronica">MIM y EU4M</a> </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <a href="http://www.epigijon.uniovi.es">
+                                                    <img style="border: 0px solid; width: 132px; height: 54px;" alt="" src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/epsig.gif"></a></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>
+                                &nbsp;</p>
+                                  <table class="MsoNormalTable" style="border: 1pt outset rgb(11, 115, 126); width: 135pt;" border="1" cellpadding="0" cellspacing="0" width="225">
+
+        <tbody>
+
+          <tr style="height: 17.25pt;">
+
+            <td style="border: 1pt inset rgb(11, 115, 126); padding: 1.5pt; background: rgb(11, 115, 126) none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; height: 17.25pt;">
+            <p class="MsoNormal"><b><span style="font-size: 10pt; font-family: Verdana; color: rgb(235, 254, 244);">NOTICIAS</span></b></p>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td style="padding: 0cm 5.4pt;"> <iframe id="NewsWindow" src="news_win.htm" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" width="100%"> </iframe> </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+                    </div>
+                </td>
+                <td valign="top" width="756">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="99%">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" bgcolor="#0b737e">
+                                    <table class="tablaprincipal" align="center">
+                                        <tbody>
+                                            <tr class="headerprincipal">
+                                                <td colspan="2">
+                                                    <b>DISEÑO DE UN PROTOTIPO MECATRÓNICO</b>
+                                                </td>
+                                            </tr>
+                                            <tr class="restoprincipal">
+                                                <td colspan="2">
+                                                    <p class="texto">
+                                                        Asignatura de 2<sup>o</sup> Cuatrimestre del <a href="http://mim.dieecs.com">Máster en Ingeniería Mecatrónica</a> de la <a href="http://www.epigijon.uniovi.es">Escuela Politécnica Superior
+                                                        de Ingeniería de Gijón</a>.</p>
+                                                </td>
+                                            </tr>
+                                            <tr class="restoprincipal">
+                                                <td width="25%">
+                                                    <p class="texto">
+                                                        Información:</p>
+                                                </td>
+                                                <td>
+                                                    <p class="texto">
+                                                        Toda la información disponible a través del Campus Virtual</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table class="tablainfo">
+                                        <tbody>
+                                            <tr class="headerinfo">
+                                                <td>
+MATERIALES PROGRAMACIÓN C++ y ENTORNO ARDUINO
+                                                </td>
+                                            </tr>
+                                            <tr class="restoinfo">
+                                                <td>
+																	<p class="texto"><a href="Descargas/C2-Pmec-Programacion.pdf@version=0001">¿Cómo abordar un proyecto "serio"?</a></p>
+																	<p class="texto"><a href="../C3-ISC/Descargas/Documentacion&#32;Software.pdf@version=0001">Documentación de software con Doxygen</a></p>
+																	<hr>
+                                                    <p class="texto">
+                                                        Enlaces y descargas para programación C++</p>
+                                                    <ul class="listapuntos">
+																	 <li class="texto"><a href="../../descargas/InstalarQt-2022.pdf@version=0001">Instalación y uso de Qt Creator</a> (pdf 4Mb)</li>
+                                                        <li class="texto"><a href="Descargas/necesidad_cpp_matrices.pdf@version=0002">Matrices en C++</a> (pdf 800Kb)</li>
+																		  <li class="texto"><a href="Descargas/html/index.html">Documentación MyMatrix</a> </li>
+                                                        <li class="texto"><a href="Descargas/ProgramacionCpp.pdf@version=0001">Comprendiendo C++</a> (pdf 1.7Mb)</li>
+                                                       
+                                                    </ul>
+																	<hr>
+                                                    <p class="texto">
+                                                        Enlaces y descargas para programación Arduino/ESP32</p>
+                                                    <ul class="listapuntos">
+																	     <li class="texto"><a href="Descargas/Default_Pmec.zip">Contenido de directorio base para proyecto VsCode+Platformio con ESP32</a></li>
+                                                        <li class="texto"><a href="https://www.arduino.cc/en/software">Instalación Arduino IDE</a> (enlace externo)</li>
+																		  <li class="texto"><a href="https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/installing.html">Añadir tarjetas ESP32 a Arduino IDE</a>(enlace externo)</li>
+                                                        <li class="texto"><a href="https://wokwi.com/">Simulador on-line Wokwi</a> (enlace externo)</li>
+                                                        <li class="texto"><a href="Descargas/WokWi_ESP32_Ejemplo1.zip">Ejemplo ESP32 Wokwi</a> (3Kb)</li>
+                                                        <li class="texto"><a href="https://www.luisllamas.es/tutoriales-arduino/">Tutoriales variados Arduino</a> (enlace externo)</li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+									<p>&nbsp;</p>
+                                    <table class="tablainfo">
+                                        <tbody>
+                                            <!--tr class="headerinfo">
+                                                <td>
+PL-01: PROGRAMACIÓN DE UN EJEMPLO EN ESP-32 ESTILO ARDUINO
+                                                </td>
+                                            </tr>
+                                            <tr class="restoinfo">
+                                                <td>
+																	<p class="texto"><a href="Prac-01/Prac-01-Cpp-Esp32.pdf?version=0001">Propuesta</a></p>
+																	<hr>
+																	<p class="texto">Algunas pautas importantes:</p>
+																	<ul class="listapuntos">
+																		<li class="texto">Realizar esquemático normalizado</li>
+																		<li class="texto">Separar claramente  funcionalidades en el código</li>
+																		<li class="texto">Realizar paso a paso</li>
+																		<li class="texto">Usar structs o clases para facilitar elaboración y seguimiento</li>
+																		<li class="texto">Usar compilación en múltiples archvivos (.h/.cpp)</li>
+																	</ul>
+																</td>
+                                            </tr-->
+                                        </tbody>
+                                    </table>
+									<p>&nbsp;</p>
+                                    <table class="tablainfo" id="PRAC_XX">
+                                        <tbody>
+                                            <!--tr class="headerinfo">
+                                                <td>
+PL-XX: PROGRAMACIÓN DE TRAYECTORIAS EN ROBOT TRAZADOR 4-GDL
+                                                </td>
+                                            </tr>
+                                            <tr class="restoinfo">
+                                                <td>
+																	<p class="texto"><a href="Prac-XX/Prac-XX-DrawingRobot.pdf?version=0001">Propuesta</a></p>
+																	<hr>
+																	<p class="texto">Descargas:</p>
+																	<ul class="listapuntos">
+																		<li class="texto">Servidor con Docker</li>
+																		<ul class="listapuntos">
+																			<li class="texto"><a href="../../descargas/SimuladorDocker/almar-simulator-install.pdf?version=1">Instrucciones de instalación</a> (contiene enlace a descargas)</li>
+																			<li class="texto"><a href="../../descargas/SimuladorDocker/plugin_AlMarDrawingRobot.pdf?version=1">Instalación plugin para Docker</a> (contiene enlace a descargas)</li>
+																		</ul>
+																		<li class="texto">Servidor Win64</li>
+																		<ul class="listapuntos">
+																			<li class="texto"><a href="../../descargas/SimuladorWin64/AlMarServerWin64.zip">Servidor</a> (descomprimir en carpeta de usuario, sin tildes ni espacios)</li> 
+																			<li class="texto"><a href="../../descargas/SimuladorWin64/UserAppAlMarDrawingRobotWin64.zip">Plugin </a> (crear carpeta UserApps en la anterior, descomprimir ahí)</li>
+																		</ul>
+																		<li class="texto">Comunes</li>
+																		<ul class="listapuntos">
+																			<li class="texto"><a href="../../descargas/Client_Libraries.zip">Librerías clientes Win64 (C/C++, Python, Matlab)</a>  (descomprimir en carpeta de instalación)</li>
+																		</ul>
+																		</li>
+																	</ul>
+																</td>
+                                            </tr-->
+                                        </tbody>
+                                    </table>
+                                           
+						</td>
+            </tr>
+        </tbody>
+    </table>
+    </td> </tr>
+    <tr>
+        <td colspan="2">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+                               <!--  INICIO PIE DE PAGINA -->
+                    <table bgcolor="#81996f" border="0" cellpadding="0" cellspacing="0" height="15" width="942">
+                        <tbody>
+                            <tr align="left" height="15">
+                                <td align="center" bgcolor="#81996f" width="100%">
+                                    <font color="white"><font face="Arial, Helvetica, sans-serif" size="2">©2012 Universidad
+                                        de Oviedo</font> </font>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--  FIN PIE DE PAGINA -->
+ 
+        </td>
+    </tr>
+    </tbody> </table>
+</body>
+</html>

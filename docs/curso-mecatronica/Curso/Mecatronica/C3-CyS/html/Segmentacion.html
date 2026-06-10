@@ -1,0 +1,188 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>Segmentacion</title>
+      <meta name="generator" content="MATLAB 7.6">
+      <meta name="date" content="2009-05-07">
+      <meta name="m-file" content="Segmentacion"><style>
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="Segmentacion.html#1">Funciones de segmentaci&oacute;n</a></li>
+               <li><a href="Segmentacion.html#2">Binarizamos la imagen</a></li>
+               <li><a href="Segmentacion.html#3">Etiquetamos la imagen</a></li>
+               <li><a href="Segmentacion.html#4">Calculamos las caracter&iacute;sticas de los objetos</a></li>
+               <li><a href="Segmentacion.html#5">Seleccionar los puntos</a></li>
+            </ul>
+         </div>
+         <h2>Funciones de segmentaci&oacute;n<a name="1"></a></h2><pre class="codeinput"><span class="comment">% Partimos de la misma imagen que antes.</span>
+img=imread(<span class="string">'291.jpg'</span>);
+img=rgb2gray(img);
+imshow(img);
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 33%
+</pre><img vspace="5" hspace="5" src="http://isa.uniovi.es/~ialvarez/Curso/Mecatronica/C3-CyS/html/Segmentacion_01.png"> <h2>Binarizamos la imagen<a name="2"></a></h2><pre class="codeinput">imgbw=im2bw(img,90/255);
+imshow(imgbw);
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 33%
+</pre><img vspace="5" hspace="5" src="Segmentacion_02.png"> <h2>Etiquetamos la imagen<a name="3"></a></h2>
+         <p>Se parte de la imagen binarizada y se usa una vecindad a 8 Como los objetos de inter&eacute;s son los puntos, invertimos la imagen</p><pre class="codeinput">[imgL,numobj] = bwlabel(~imgbw,8);
+
+imshow(label2rgb(imgL))
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 33%
+</pre><img vspace="5" hspace="5" src="Segmentacion_03.png"> <h2>Calculamos las caracter&iacute;sticas de los objetos<a name="4"></a></h2><pre class="codeinput">datos_obj = regionprops(imgL,<span class="string">'all'</span>)
+</pre><pre class="codeoutput">
+datos_obj = 
+
+152x1 struct array with fields:
+    Area
+    Centroid
+    BoundingBox
+    SubarrayIdx
+    MajorAxisLength
+    MinorAxisLength
+    Eccentricity
+    Orientation
+    ConvexHull
+    ConvexImage
+    ConvexArea
+    Image
+    FilledImage
+    FilledArea
+    EulerNumber
+    Extrema
+    EquivDiameter
+    Solidity
+    Extent
+    PixelIdxList
+    PixelList
+    Perimeter
+
+</pre><h2>Seleccionar los puntos<a name="5"></a></h2><pre class="codeinput"><span class="comment">% El di&aacute;metro de los puntos es de aproximadamente 40 pixels. Por ello, un</span>
+<span class="comment">% posible criterio para seleccionar los puntos es que el eje mayor y el eje</span>
+<span class="comment">% menor sean aproximadamente iguales a 40. Se fijara una holgura de +- 7 pixels</span>
+
+puntos=find(abs([datos_obj(:).MajorAxisLength]-40)&lt;7 &amp; abs([datos_obj(:).MinorAxisLength]-40)&lt;7);
+
+<span class="comment">% En la variable puntos queda almacenado el n&uacute;mero de los objetos que cumplen la</span>
+<span class="comment">% condici&oacute;n fijada. Usaremos esta informaci&oacute;n para marcar los centros.</span>
+centros=reshape([datos_obj(puntos).Centroid],2,length(puntos))';
+imshow(img);
+hold <span class="string">on</span>;
+axis <span class="string">ij</span>;
+plot(centros(:,1),centros(:,2),<span class="string">'rx'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'MarkerSize'</span>,10);
+hold <span class="string">off</span>
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 33%
+</pre><img vspace="5" hspace="5" src="Segmentacion_04.png"> <p class="footer"><br>
+            Published with MATLAB&reg; 7.6<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% Funciones de segmentación
+
+% Partimos de la misma imagen que antes.
+img=imread('291.jpg');
+img=rgb2gray(img);
+imshow(img);
+
+%% Binarizamos la imagen
+imgbw=im2bw(img,90/255);
+imshow(imgbw);
+
+%% Etiquetamos la imagen
+% Se parte de la imagen binarizada y se usa una vecindad a 8
+% Como los objetos de interés son los puntos, invertimos la imagen
+[imgL,numobj] = bwlabel(~imgbw,8);
+
+imshow(label2rgb(imgL))
+
+%% Calculamos las características de los objetos
+
+datos_obj = regionprops(imgL,'all')
+
+%% Seleccionar los puntos
+
+% El diámetro de los puntos es de aproximadamente 40 pixels. Por ello, un
+% posible criterio para seleccionar los puntos es que el eje mayor y el eje
+% menor sean aproximadamente iguales a 40. Se fijara una holgura de +- 7 pixels
+
+puntos=find(abs([datos_obj(:).MajorAxisLength]-40)<7 & abs([datos_obj(:).MinorAxisLength]-40)<7);
+
+% En la variable puntos queda almacenado el número de los objetos que cumplen la
+% condición fijada. Usaremos esta información para marcar los centros.
+centros=reshape([datos_obj(puntos).Centroid],2,length(puntos))';
+imshow(img);
+hold on;
+axis ij;
+plot(centros(:,1),centros(:,2),'rx','LineWidth',2,'MarkerSize',10);
+hold off
+
+
+##### SOURCE END #####
+-->
+   </body>
+</html>

@@ -1,0 +1,269 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>demohough</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-05-24"><meta name="m-file" content="demohough"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="demohough.html#1">Leer la imagen</a></li><li><a href="demohough.html#2">Detectar contornos</a></li><li><a href="demohough.html#3">Calcular la transformada de Hough y visualizar el acumulador</a></li><li><a href="demohough.html#4">Busqueda de picos</a></li><li><a href="demohough.html#5">Obtenci&oacute;n de los puntos que pertenecen a la linea</a></li></ul></div><h2>Leer la imagen<a name="1"></a></h2><pre class="codeinput">I = imread(<span class="string">'circuit.tif'</span>);
+</pre><h2>Detectar contornos<a name="2"></a></h2><pre class="codeinput">BW = edge(I,<span class="string">'canny'</span>);
+figure, imshow(BW);
+</pre><img vspace="5" hspace="5" src="demohough_01.png" alt=""> <h2>Calcular la transformada de Hough y visualizar el acumulador<a name="3"></a></h2><pre class="codeinput"><span class="comment">% La funcion hough permite especificar dos parametros</span>
+<span class="comment">% [H, theta, rho] = hough(BW, ParameterName, ParameterValue)</span>
+<span class="comment">% donde:</span>
+<span class="comment">% ParemeterName     ParameterValue</span>
+<span class="comment">% 'RhoResolution'   Es un valor entre 0 y el tama&ntilde;o de la diagonal de la</span>
+<span class="comment">%                   imagen, que especifica la cuanficacion del parametro</span>
+<span class="comment">%                   rho. Por defecto vale 1</span>
+<span class="comment">% 'Theta'           Es un vector que especifica el conjunto de posibles</span>
+<span class="comment">%                   valores de theta. El rango de posibles valores</span>
+<span class="comment">%                   -90 &lt;= theta &lt; 90</span>
+[H,theta,rho] = hough(BW);
+
+<span class="comment">% H es el acumulador. Cada fila representa un posible valor de rho y cada</span>
+<span class="comment">% columna un posible valor de theta.</span>
+<span class="comment">% theta y rho son vectores con todos los posibles valores de theta y rho</span>
+<span class="comment">% empleados</span>
+
+<span class="comment">% visualizacion del acumulador</span>
+figure, imshow(imadjust(mat2gray(H)),[],<span class="string">'XData'</span>,theta,<span class="string">'YData'</span>,rho,<span class="keyword">...</span>
+        <span class="string">'InitialMagnification'</span>,<span class="string">'fit'</span>);
+xlabel(<span class="string">'\theta (degrees)'</span>), ylabel(<span class="string">'\rho'</span>);
+axis <span class="string">on</span>, axis <span class="string">normal</span>, hold <span class="string">on</span>;
+colormap(hot)
+</pre><img vspace="5" hspace="5" src="demohough_02.png" alt=""> <h2>Busqueda de picos<a name="4"></a></h2><pre class="codeinput"><span class="comment">% Identifica picos en el acumulador. Ademas del acumulador y el numero de</span>
+<span class="comment">% picos que se desean encontrar, podemos pasarle otros dos par&aacute;metros:</span>
+<span class="comment">% peaks = houghpeaks(H, numpeaks, param1, val1, param2, val2)</span>
+<span class="comment">% param         val</span>
+<span class="comment">% 'threshold'   escalar positivo que especifica el umbral minimo para que</span>
+<span class="comment">%               considere un pico. Por defecto es el 50% del maximo del</span>
+<span class="comment">%               acumulador</span>
+<span class="comment">% 'NHoodSize'   Un vector de dos enteros impares que indican el tama&ntilde;o de</span>
+<span class="comment">%               la ventana de supresion tras localizar un pico. Por defecto</span>
+<span class="comment">%               son los menores impares mayores o iguales que las</span>
+<span class="comment">%               dimensiones del acumulador dividas por 50.</span>
+P = houghpeaks(H,5,<span class="string">'threshold'</span>,ceil(0.3*max(H(:))));
+
+<span class="comment">% el resultado es una matriz con dos columnas que indican la fila y la</span>
+<span class="comment">% columna del pico. Las filas corresponden con los valores de rho y las</span>
+<span class="comment">% columnas con los valores de theta</span>
+x = theta(P(:,2));
+y = rho(P(:,1));
+plot(x,y,<span class="string">'s'</span>,<span class="string">'color'</span>,<span class="string">'black'</span>);
+</pre><img vspace="5" hspace="5" src="demohough_03.png" alt=""> <h2>Obtenci&oacute;n de los puntos que pertenecen a la linea<a name="5"></a></h2><pre class="codeinput"><span class="comment">% houghlines permite obtener los segmentos de puntos de la imagen asociados</span>
+<span class="comment">% con una celda del acumulador. theta y rho son los valores devueltos por</span>
+<span class="comment">% la funcion hough y P son las posiciones de las celdas que queremos</span>
+<span class="comment">% analizar (normalmente los valores devueltos por peaks)</span>
+<span class="comment">% La funci&oacute;n admite dos parametros adicionales:</span>
+<span class="comment">% param         val</span>
+<span class="comment">% 'FillGap'     real positivo que especifica la distancia entre dos segmenos</span>
+<span class="comment">%               asociados con una misma celda del acumulador. Si la distancia</span>
+<span class="comment">%               es menor a la indicada (por defecto 20), la funci&oacute;n fusiona los</span>
+<span class="comment">%               dos trozos en un mismo segmento.</span>
+<span class="comment">% 'MinLength'   real positivo que especifica cuando los segmentos</span>
+<span class="comment">%               fusionados deben descartarse o no. Si la linea es mas corta</span>
+<span class="comment">%               del valor especificado (por defecto 40), la linea se</span>
+<span class="comment">%               descarta.</span>
+lines = houghlines(BW,theta,rho,P,<span class="string">'FillGap'</span>,5,<span class="string">'MinLength'</span>,7);
+
+<span class="comment">% lines es un array de estructuras con los siguientes campos:</span>
+<span class="comment">% .point1 -&gt;    vector [x y] que especifica las coordenadas de un extremo del</span>
+<span class="comment">%               segmento</span>
+<span class="comment">% .point2 -&gt;    vector [x y] que especifica las coordenadas del otro</span>
+<span class="comment">%               extremo</span>
+<span class="comment">% theta -&gt;      valor del angulo (en grados)</span>
+<span class="comment">% rho   -&gt;      valor de la distancia al origen.</span>
+
+
+<span class="comment">% dibujar los segmentos sobre la imagen</span>
+figure, imshow(I), hold <span class="string">on</span>
+max_len = 0;
+<span class="keyword">for</span> k = 1:length(lines)
+   <span class="comment">% matriz en la que cada fila es un segmento</span>
+   xy = [lines(k).point1; lines(k).point2];
+
+   <span class="comment">% dibujar el segmento</span>
+   plot(xy(:,1),xy(:,2),<span class="string">'LineWidth'</span>,2,<span class="string">'Color'</span>,<span class="string">'green'</span>);
+
+   <span class="comment">% Marcar el comienzo y el final del segmento</span>
+   plot(xy(1,1),xy(1,2),<span class="string">'x'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'Color'</span>,<span class="string">'yellow'</span>);
+   plot(xy(2,1),xy(2,2),<span class="string">'x'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'Color'</span>,<span class="string">'red'</span>);
+
+   <span class="comment">% Buscar el segmento mas largo</span>
+   len = norm(lines(k).point1 - lines(k).point2);
+   <span class="keyword">if</span> ( len &gt; max_len)
+      max_len = len;
+      xy_long = xy;
+   <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% Dibujar el segmento mas largo en otro color</span>
+plot(xy_long(:,1),xy_long(:,2),<span class="string">'LineWidth'</span>,2,<span class="string">'Color'</span>,<span class="string">'red'</span>);
+</pre><img vspace="5" hspace="5" src="demohough_04.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Leer la imagen
+I = imread('circuit.tif');
+
+%% Detectar contornos
+BW = edge(I,'canny');
+figure, imshow(BW);
+
+%% Calcular la transformada de Hough y visualizar el acumulador
+
+% La funcion hough permite especificar dos parametros
+% [H, theta, rho] = hough(BW, ParameterName, ParameterValue)
+% donde:
+% ParemeterName     ParameterValue
+% 'RhoResolution'   Es un valor entre 0 y el tamaño de la diagonal de la
+%                   imagen, que especifica la cuanficacion del parametro
+%                   rho. Por defecto vale 1
+% 'Theta'           Es un vector que especifica el conjunto de posibles
+%                   valores de theta. El rango de posibles valores
+%                   -90 <= theta < 90
+[H,theta,rho] = hough(BW);
+
+% H es el acumulador. Cada fila representa un posible valor de rho y cada
+% columna un posible valor de theta.
+% theta y rho son vectores con todos los posibles valores de theta y rho 
+% empleados 
+
+% visualizacion del acumulador
+figure, imshow(imadjust(mat2gray(H)),[],'XData',theta,'YData',rho,...
+        'InitialMagnification','fit');
+xlabel('\theta (degrees)'), ylabel('\rho');
+axis on, axis normal, hold on;
+colormap(hot)
+
+%% Busqueda de picos
+
+% Identifica picos en el acumulador. Ademas del acumulador y el numero de
+% picos que se desean encontrar, podemos pasarle otros dos parámetros:
+% peaks = houghpeaks(H, numpeaks, param1, val1, param2, val2)
+% param         val
+% 'threshold'   escalar positivo que especifica el umbral minimo para que
+%               considere un pico. Por defecto es el 50% del maximo del
+%               acumulador
+% 'NHoodSize'   Un vector de dos enteros impares que indican el tamaño de
+%               la ventana de supresion tras localizar un pico. Por defecto
+%               son los menores impares mayores o iguales que las
+%               dimensiones del acumulador dividas por 50.
+P = houghpeaks(H,5,'threshold',ceil(0.3*max(H(:))));
+
+% el resultado es una matriz con dos columnas que indican la fila y la
+% columna del pico. Las filas corresponden con los valores de rho y las
+% columnas con los valores de theta
+x = theta(P(:,2));
+y = rho(P(:,1));
+plot(x,y,'s','color','black');
+
+%% Obtención de los puntos que pertenecen a la linea
+
+% houghlines permite obtener los segmentos de puntos de la imagen asociados
+% con una celda del acumulador. theta y rho son los valores devueltos por
+% la funcion hough y P son las posiciones de las celdas que queremos
+% analizar (normalmente los valores devueltos por peaks)
+% La función admite dos parametros adicionales:
+% param         val
+% 'FillGap'     real positivo que especifica la distancia entre dos segmenos
+%               asociados con una misma celda del acumulador. Si la distancia
+%               es menor a la indicada (por defecto 20), la función fusiona los
+%               dos trozos en un mismo segmento.
+% 'MinLength'   real positivo que especifica cuando los segmentos
+%               fusionados deben descartarse o no. Si la linea es mas corta
+%               del valor especificado (por defecto 40), la linea se
+%               descarta.
+lines = houghlines(BW,theta,rho,P,'FillGap',5,'MinLength',7);
+
+% lines es un array de estructuras con los siguientes campos:
+% .point1 ->    vector [x y] que especifica las coordenadas de un extremo del
+%               segmento
+% .point2 ->    vector [x y] que especifica las coordenadas del otro
+%               extremo
+% theta ->      valor del angulo (en grados)
+% rho   ->      valor de la distancia al origen.
+
+
+% dibujar los segmentos sobre la imagen
+figure, imshow(I), hold on
+max_len = 0;
+for k = 1:length(lines)
+   % matriz en la que cada fila es un segmento
+   xy = [lines(k).point1; lines(k).point2];
+   
+   % dibujar el segmento
+   plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
+
+   % Marcar el comienzo y el final del segmento
+   plot(xy(1,1),xy(1,2),'x','LineWidth',2,'Color','yellow');
+   plot(xy(2,1),xy(2,2),'x','LineWidth',2,'Color','red');
+
+   % Buscar el segmento mas largo
+   len = norm(lines(k).point1 - lines(k).point2);
+   if ( len > max_len)
+      max_len = len;
+      xy_long = xy;
+   end
+end
+
+% Dibujar el segmento mas largo en otro color
+plot(xy_long(:,1),xy_long(:,2),'LineWidth',2,'Color','red');
+##### SOURCE END #####
+--></body></html>

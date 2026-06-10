@@ -1,0 +1,531 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>IMPLEMENTACIÓN DE SISTEMAS DE CONTROL</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	 <meta http-equiv="Pragma" content="no-cache" />
+	 <meta http-equiv="Expires" content="0" />
+    <link href="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/estilo.css" type="text/css" rel="stylesheet">
+    <meta content="MSHTML 6.00.2600.0" name="GENERATOR">
+    <script language="JavaScript">
+// change this to where you store the blank.gif image
+var blank = "/~ialvarez/Curso/index_archivos/blank.gif";
+topedge = 570; // location of news box from top of page
+leftedge = 30; // location of news box from left edge
+boxheight = 165; // height of news box
+boxwidth = 140; // width of news box
+scrollheight = 165; // total height of all data to be scrolled
+function scrollnews(cliptop) {
+if (document.layers) {
+newsDiv = document.news;
+newsDiv.clip.top = cliptop;
+newsDiv.clip.bottom = cliptop + boxheight;
+newsDiv.clip.left = 0;
+newsDiv.clip.right = boxwidth + leftedge;
+newsDiv.left = leftedge;
+newsDiv.top = topedge - cliptop;
+}
+else {
+newsDiv = news.style;
+newsDiv.clip = "rect(" + cliptop + "px " + (boxwidth + leftedge) + "px " + (cliptop + boxheight) + "px 0px)";
+newsDiv.pixelLeft = leftedge;
+newsDiv.pixelTop = topedge - cliptop;
+}
+cliptop = (cliptop + 1) % (scrollheight + boxheight);
+newsDiv.visibility='visible';
+setTimeout("scrollnews(" + cliptop + ")", 50);
+}
+// End -->
+  </script>
+
+</head>
+<body leftmargin="8" topmargin="0" background="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/fondo_new.jpg"
+    bgcolor="#ffffff" marginheight="0" marginwidth="8" text="#000000">
+    <table border="0" cellpadding="0" cellspacing="0" width="900" margin="0" padding="0">
+        <tbody>
+            <tr>
+                <td colspan="2" width="900">
+                                       <!-- TABLA CABECERAS  --->
+                    <table border="0" cellpadding="0" cellspacing="0" width="900">
+                        <tbody>
+                            <tr align="center" bgcolor="#81996f" height="70">
+                                <td width="89">
+                                    <a href="http://www.uniovi.es/">
+                                        <img alt="Universidad de Oviedo" src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/logo-uniovi.jpg" border="0"
+                                            height="81" width="86"></a>
+                                </td>
+                                <td width="545">
+                                    <a href="http://www.dieecs.uniovi.es">
+                                        <img alt="Dpto. de Ingeniería Eléctrica" src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/logo-dpto.gif" border="0"
+                                            height="88" width="732"></a>
+                                </td>
+                                <td width="127">
+                                    <a href="http://isa.uniovi.es">
+                                        <img alt="Area Ing. de Sistemas y Automártica" src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/isanegro.gif"
+                                            border="0" height="82" width="124"></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+						  <p>
+						  </p>
+
+                    <!--  FIN DE  LAS CABECERAS  -->
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" width="212">
+                    <div align="center">
+                        
+        <table align="center" border="1" bordercolor="#ffffff" cellpadding="10" cellspacing="0"
+            width="211">
+            <tbody>
+                <tr>
+                    <td>
+                        <div align="center">
+                            <table align="center" border="1" bordercolor="#0b737e" cellpadding="1" cellspacing="0"
+                                width="180">
+                                <tbody>
+                                    <tr>
+                                        <td bgcolor="#0b737e">
+                                            <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><b><font color="#ebfef4">
+                                                IGNACIO ALVAREZ</font></b></font><font face="Verdana, Arial, Helvetica, sans-serif"
+                                                    size="2"></font>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="http://isa.uniovi.es/~ialvarez/Curso/index.shtml">Página
+                                                    Principal</a></font></div>
+                                        </td>
+                                    </tr>
+                                    <tr align="center">
+                                        <td>
+                                            <a href="http://isa.uniovi.es">
+                                                <img src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/link_to_isa.gif" border="0" height="71" width="139"></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>
+                                &nbsp;</p>
+                            <table align="center" border="1" bordercolor="#0b737e" cellpadding="1" cellspacing="0"
+                                width="180">
+                                <tbody>
+                                    <tr>
+                                        <td bgcolor="#0b737e">
+                                            <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><b><font color="#ebfef4">
+                                                MASTER EN MECATRONICA</font></b></font>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="index.shtml.html">Principal</a></font></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="../C1-CyP/index.shtml.html">Computadores y Programación</a></font></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="../C2-DPM/index.shtml.html">Diseño de un Prototipo Mecatrónico</a></font></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="index.shtml.html">Implementación de Sistemas de Control</a></font></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <font face="Verdana, Arial, Helvetica, sans-serif" size="3"><a href="../C3-CyS/index.shtml.html">Conferencias y Seminarios III</a></font></div>
+                                        </td>
+                                    </tr>                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <a href="http://mim.dieecs.com">
+                                                    <img style="border: 0px solid; width: 52px; height: 63px;" alt="" src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/mim.jpg"></a> <a href="http://www.uniovi.es/mecatronica">MIM y EU4M</a> </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div align="center">
+                                                <a href="http://www.epigijon.uniovi.es">
+                                                    <img style="border: 0px solid; width: 132px; height: 54px;" alt="" src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/epsig.gif"></a></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>
+                                &nbsp;</p>
+                                  <table class="MsoNormalTable" style="border: 1pt outset rgb(11, 115, 126); width: 135pt;" border="1" cellpadding="0" cellspacing="0" width="225">
+
+        <tbody>
+
+          <tr style="height: 17.25pt;">
+
+            <td style="border: 1pt inset rgb(11, 115, 126); padding: 1.5pt; background: rgb(11, 115, 126) none repeat scroll 0% 50%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial; height: 17.25pt;">
+            <p class="MsoNormal"><b><span style="font-size: 10pt; font-family: Verdana; color: rgb(235, 254, 244);">NOTICIAS</span></b></p>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td style="padding: 0cm 5.4pt;"> <iframe id="NewsWindow" src="news_win.htm" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" width="100%"> </iframe> </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+                    </div>
+                </td>
+                <td valign="top" width="756">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="99%">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" bgcolor="#0b737e">
+                                    <table class="tablaprincipal" align="center">
+                                        <tbody>
+                                            <tr class="headerprincipal">
+                                                <td colspan="2">
+                                                    <b>IMPLEMENTACIÓN DE SISTEMAS DE CONTROL</b>
+                                                </td>
+                                            </tr>
+                                            <tr class="restoprincipal">
+                                                <td colspan="2">
+                                                    <p class="texto">
+                                                        Asignatura de 3<sup>er</sup> Cuatrimestre del <a href="http://mim.dieecs.com">Máster en Ingeniería Mecatrónica</a> de la <a href="http://www.epigijon.uniovi.es">Escuela Politécnica Superior
+                                                        de Ingeniería de Gijón</a>.</p>
+                                                </td>
+                                            </tr>
+                                            <tr class="restoprincipal">
+                                                <td width="25%">
+                                                    <p class="texto">
+                                                        Créditos:</p>
+                                                </td>
+                                                <td>
+                                                    <p class="texto">
+                                                        6 Créditos ECTS: </p>
+                                                        <ul class="texto">
+                                                        <li class="texto">Teoría y Prácticas presenciales (45 horas).</li>
+                                                        <li class="texto">Trabajo no presencial del alumno (105 horas).</li>
+                                                        </ul>
+                                                </td>
+                                            </tr>
+                                            <tr class="restoprincipal">
+                                                <td>
+                                                    <p class="texto">
+                                                        Profesorado:</p>
+                                                </td>
+                                                <td>
+                                                    <p class="texto">
+                                                        <a href="mailto:ialvarez@uniovi.es">Ignacio Alvarez</a> (Programación)</p>
+                                                    <p class="texto">
+                                                        <a href="mailto:fbriz@uniovi.es">Fernando Briz</a> (Accionamientos y procesamiento de señal)</p>
+                                                </td>
+                                            </tr>
+                                            <tr class="restoprincipal">
+                                                <td>
+                                                    <p class="texto">
+                                                        Distribución horaria:</p>
+                                                </td>
+                                                <td>
+                                                    <p class="texto">
+                                                        <!--a href="Descargas/horario.pdf?version=2024-25">Horario detallado</a-->
+													<p class="texto">(IA)= Ignacio Alvarez</p>
+													<p class="texto">(FB) = Fernando Briz</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table class="tablainfo">
+                                        <tbody>
+                                            <tr class="headerinfo">
+                                                <td>
+                                                    OBJETIVOS DOCENTES
+                                                </td>
+                                            </tr>
+                                            <tr class="restoinfo">
+                                                <td>
+                                                    <p class="texto">
+                                                        Adquirir un conocimiento básico de las tecnologías disponibles para implementar la parte automática de un sistema mecatrónico, con especial dedicación a:</p>
+                                                    <ul class="listapuntos">
+                                                        <li class="texto">Programación C++ sobre S.O. Linux</li>
+                                                        <li class="texto">Implementación de protocolos de comunicación.</li>
+                                                        <li class="texto">Interfaz gráfica de usuario</li>
+                                                        <li class="texto">Implantación en hardware embebido (tarjeta Beaglebone).</li>
+                                                        <li class="texto">Procesamiento de señal</li>
+                                                        <li class="texto">Selección y parametrización de accionamientos</li>
+                                                        <li class="texto">Integración</li>
+                                                    </ul>
+													<p class="texto">
+														<a href="Descargas/ISC-2025.pdf@version=25-26">Introducción de la asignatura</a> (pdf 560Kb)
+													</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <p>
+                                        &nbsp;</p>
+                                    <table class="tablainfo">
+                                        <tbody>
+                                            <tr class="headerinfo">
+                                                <td>
+                                                    EVALUACIÓN
+                                                </td>
+                                            </tr>
+                                            <tr class="restoinfo">
+                                            <td><p class="texto">La evaluación se realizará mediante:</p>
+                                                                        <ul class="listapuntos">
+                                                                            <li class="texto">La realización de un trabajo individual (40%), en varias fases (ver documento <a href="Descargas/ISC.pdf@version=24-25">Introducción de la asignatura</a>). </li>
+                                                                            <li class="texto">El resultado de un examen teórico/práctico (60%), convocatorias en Enero, Mayo y Julio. Según la reglamentación de la Universidad de Oviedo, cada alumno podrá presentarse únicamente a 2 de estas convocatorias (a su elección) en el Curso Académico.</li>
+																									<!--ul class="listapuntos">
+																										 <li class="texto">Convocatoria Enero: 10/01/2026, 09:00, Aula MIM2</li>
+																										 <li class="texto">Convocatoria Mayo: 28/05/2025, 16:00, Aula MIM2</li>
+																										 <li class="texto">Convocatoria Julio: 02/07/2025, 16:00, Aula MIM2</li>
+																									</ul-->
+																									<li class="texto">Los alumnos que realicen todas las entregas del trabajo a tiempo, no necesitarán realizar el examen teórico/práctico.</li>
+																								</ul>                                            
+                                            </td></tr>
+                                            
+                                        </tbody>
+									</table>
+                                       &nbsp;</p>
+                                    <table class="tablainfo">
+                                        <tbody>
+                                            <tr class="headerinfo">
+                                                <td>
+                                                    PRACTICAS LABORATORIO
+                                                </td>
+                                            </tr>
+                                            <tr class="restoinfo">
+                                            <td class="texto">
+														   Los alumnos que deseen usar su propio ordenador port&aacute;til deben instalar previamente el programa Qt-Creator según las instrucciones <a href="../../descargas/InstalarQt-2022.pdf@version=0001">
+                                             InstalarQt-2022.pdf</a> (PDF 4Mb). Este programa es necesario también para el desarrollo del trabajo obligatorio.
+															<ul class="listapuntos">
+																<li class="texto"><a href="Descargas/EjemploTrayectoriaCpp.pdf@version=2024">EJ1-C++</a>: Ejemplo básico C++ (punto, vector, trayectoria)</li>
+																<li class="texto"><a href="Descargas/Prac-01-Cpp-2024.pdf@version=1">PL1-C++</a>: Introducción a C++ (manejo de señales temporales)</li>
+																<li class="texto"><a href="Descargas/Prac-02-Cpp-2025.pdf@version=1">PL2-C++</a>: Introducción a Xml y Qt-SDK (QString, QVector, QFile)</li>
+																<li class="texto"><a href="Descargas/EjemploTrayectoriaObstaculos.pdf@version=2024">EJ2-C++</a>: Ejemplo avanzado C++ (punto, vector, trayectoria, obstáculos)</li>
+																<li class="texto"><a href="Descargas/003-SignalsSlotsQt.pdf@version=2024">EJ3-C++</a>: Programación orientada eventos en Qt (PDF 0.9Mb)</li>
+                                                <li class="texto"><a href="Descargas/Prac-03-Cpp-2024.pdf@version=1">PL3-C++</a>: C++ y Qt-SDK para programación orientada a eventos</li>
+                                                <li class="texto"><a href="Descargas/Prac-04-Cpp-2025.pdf@version=0003">PL4-C++</a>: C++ y Qt-SDK para control de motores por TCP/IP <b>(entrega 10/11/2025 , 23:59)</b></li>
+                                                <li class="texto"><a href="Descargas/Prac-05-Cpp-2024.pdf@version=1">PL5-C++</a>: C++ y Qt-SDK para generación de trayectorias <b>(entrega 01/12/2025 , 23:59)</b></li>
+																<li class="texto"><img src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/nuevo.gif" alt="nuevo.gif" height="20" width="20"/><a href="Descargas/Prac-06-Cpp-2025.pdf@version=1">PL6-C++</a>: Sintonización del control <b>(entrega 10/01/2026 , 23:59)</b></li>
+												</ul>
+                                            </td></tr>
+                                            
+                                        </tbody>
+									</table>
+									<p>&nbsp;</p>
+                                    <table class="tablainfo">
+                                        <tbody>
+                                            <tr class="headerinfo">
+                                                <td>
+                                                    TRABAJO DE LA ASIGNATURA
+                                                </td>
+                                            </tr>
+                                            <tr class="restoinfo">
+                                            <td class="texto">
+														   <img src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/nuevo.gif" alt="nuevo.gif" height="20" width="20"/>El trabajo de la asignatura <b>será similar</b> a: <a href="Descargas/Trabajo-IMPLE-2024.pdf@version=0002">Trabajo-IMPLE-2024.pdf</a>
+															En dicho documento se encuentran la especificaciones (de programación y de sintonización de control), plazos, y método de evaluación (referidos al curso 2024).
+                                            </td></tr>
+                                            
+                                        </tbody>
+									</table>
+									<p>&nbsp;</p>
+                           <!--table class="tablainfo">
+                                        <tbody>
+                                            <tr class="headerinfo">
+                                                <td>
+                                                    TRABAJO ASIGNATURA "DESARROLLO DE UN SISTEMA MECATRÓNICO INDUSTRIAL"
+                                                </td>
+                                            </tr>
+                                            <tr class="restoinfo">
+                                            <td class="texto">
+														   División del trabajo: <a href="Descargas/Trabajo_Grupo_Software-2022-2023.pdf?version=0001">
+                                             Trabajo Grupo Software.pdf</a> (PDF 1.5Mb). 
+                                            </td></tr>
+                                            
+                                        </tbody>
+									</table>
+									<p>&nbsp;</p-->
+                                    <table class="tablainfo">
+                                        <tbody>
+                                            <tr class="headerinfo">
+                                                <td>
+                                                    DOCUMENTACIÓN PROGRAMACIÓN
+                                                </td>
+                                            </tr>
+                                            <tr class="restoinfo">
+						<td><p class="texto"><b>Programación C++, Orientada a Eventos, GUI, Comunicaciones:</b></p>
+                                                                        <ul class="listapuntos">
+																		<li class="texto"><a href="Descargas/Programacion&#32;de&#32;Control&#32;-&#32;Implantacion&#32;con&#32;SO.pdf@version=2024">Introducción a la programación de sistemas de control complejos</a> (PDF 3Mb).</li>
+                                                                            <li class="texto"> <a href="Descargas/000-ProgramacionCpp.pdf@version=0001">Introducción a la programación
+                                                            en C++</a> (PDF 534Kb).</li>
+																				<li class="texto"><a href="Descargas/001-CppPasoaPaso_cap1.pdf@version=0001">Programación en C++ paso a paso (capítulo 1)</a> <!--img src="/~ialvarez/Curso/index_archivos/nuevo.gif" alt="nuevo.gif" height="20" width="20"/-->(PDF 1.5Mb).</li>
+															<li class="texto"><a href="http://www.eeng.dcu.ie/~ee553/ee402notes/html/ch01.html">Introducción a la programación
+                                                            en C++</a> (enlace externo a School of Electronic Engineering, Dublin City University, Ireland).</li>
+																				<li class="texto"><a href="http://www.lmpt.univ-tours.fr/~volkov/C++.pdf">A complete guide to programming in C++</a>(PDF, enlace externo)</li>
+																				<li class="texto"><a href="https://hackingcpp.com/cpp/beginners_guide.html">Hacking CPP - Begginers guide</a> (enlace externo).</li>
+																				<li class="texto"><a href="https://www.zator.com/Cpp/index.htm">Curso C++ Zator Systems</a> (enlace externo).</li>
+									    <li class="texto"><a href="Descargas/003-SignalsSlotsQt.pdf@version=2024">Programación orientada eventos en Qt</a>
+									    (PDF 0.9Mb)</li>
+									    <li class="texto"><a href="Descargas/002-ProgramacionGraficaQt.pdf@version=0001">Introducción a la programación en entorno gráfico Qt</a>
+									    (PDF 3.6Mb)</li>
+										<li  class="texto"><a href="../../descargas/Comunicaciones-2024.pdf@version=0001">Comunicaciones</a> (PDF)
+									    </li>
+										 <li  class="texto"><a href="../../descargas/tcp-client-server-varios-lenguajes.pdf@version=0001">Configuración y programación de comunicaciones TCP/IP</a> (PDF)
+									    </li>
+										 <li  class="texto"><a href="Descargas/OtrosLenguajesOOP.pdf@version=0001">Otros lenguajes Orientados a Objetos</a>(PDF)
+									    </li>
+										<li  class="texto">
+										<a href="Descargas/Documentacion&#32;Software.pdf@version=0001">Documentaci&oacute;n de software con Doxygen</a> (PDF 420Kb)
+										</li>
+										<li  class="texto">
+										<a href="Descargas/Comu_Sockets_con_Doc_doxygen.rar@version=0001" download="Comu_Sockets_con_Doc_doxygen.rar">Ejemplo comunicaciones en red (TCP y UDP) en Qt, con documentaci&oacute;n tipo Doxygen</a> (rar 1Mb)
+										</li>
+										<li  class="texto">
+										<a href="Descargas/005-UserInterfaceOptions.pdf@version=2025-3">Opciones para interfaz gráfico</a> (PDF 3Mb)
+										</li>
+										
+ 										<li  class="texto"><!--img src="/~ialvarez/Curso/index_archivos/nuevo.gif" alt="nuevo.gif" height="20" width="20"--> 
+										<a href="Descargas/Instalacion_Uso_Qwt.pdf@version=2021">Instalaci&oacute;n y uso b&aacute;sico de QwtPlot</a> (PDF 648Kb)
+										</li>
+                                                       <li class="texto"><a href="https://www.onlinegdb.com/online_c++_compiler">
+                                                            Compilador y depurador on-line (para pruebas r&aacute;pidas)</li>
+										<li  class="texto"><!--img src="/~ialvarez/Curso/index_archivos/nuevo.gif" alt="nuevo.gif" height="20" width="20"--> 
+										<a href="../../descargas/DeploytQtProgram-windows.pdf@version=0001">Distribuir programa Qt (Windows)</a> (PDF)
+									    </li>
+
+									</ul>
+									
+						</td>
+					    </tr>
+
+						<tr class="restoinfo">
+						<td><p class="texto"><b>Programación de BBB-Linux y tfno m&oacute;vil Android desde Qt:</b></p>										
+						<ul class="listapuntos">
+                            <li class="texto"><img src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/nuevo.gif" alt="nuevo.gif" height="20" width="20"/><a href="../../descargas/BeagleBone/microcontrollers-and-microprocessors+BBB.pdf@version=0001">Introducción a los Single Board Computers: BeagleBone Black</a> (PDF 2.1Mb)</li>
+                            <li class="texto"><img src="http://isa.uniovi.es/~ialvarez/Curso/index_archivos/nuevo.gif" alt="nuevo.gif" height="20" width="20"/><a href="../../descargas/BeagleBone/Ubuntu-22-04-BBB-Alumnos.pdf@version=0001">Instalaciones para programar BBB desde Qt-Creator (Linux)</a> (PDF 1.9Mb)</li>
+                            <li class="texto"><a href="Descargas/Android&#32;for&#32;Qt&#32;instalacion&#32;y&#32;uso.pdf@version=0001">Instalación de Kit Android para Qt-Creator (Windows)</a> (PDF 0.5Mb)</li>
+						</ul>
+                                            
+						</td>
+					    </tr>
+                    </tbody>
+				</table>
+                <table class="tablainfo">
+                                        <tbody>
+                                            <tr class="headerinfo">
+                                                <td colspan="2">
+                                                    DOCUMENTACIÓN PROCESAMIENTO DE SEÑAL Y ACCIONAMIENTOS
+                                                </td>
+                                            </tr>
+                        <tr class="restoinfo">
+						<td><p class="texto"><b>Recordatorios:</b></p>
+								<ul class="listapuntos">
+								<li class="texto">Series temporales, <a href="../../descargas/series_temporales_regando.pdf@version=2022">un ejemplo sencillo</a> (PDF 800Kb).</li> 
+								<li class="texto">Conceptos básicos de <a href="http://isa.uniovi.es/~ialvarez/Curso/descargas/gs_rs_gz_rz.pdf.pdf?version=2022">control discreto</a> (PDF 900Kb).</li> 
+									<li class="texto"><a href="Descargas/1&#32;-&#32;Sistemas&#32;de&#32;control&#32;(recordatorio).pdf@version=2021">1.- Recordatorio de Sistemas de Control</a> (PDF 544Kb).</li>
+									<li class="texto"><a href="Descargas/2&#32;-&#32;Respuesta&#32;en&#32;frecuencia.pdf@version=2021">2.- Respuesta en frecuencia</a> (PDF 602Kb).</li>
+									<li class="texto"><a href="http://isa.uniovi.es/~ialvarez/Curso/Mecatronica/C3-ISC/Descargas/3%20-%20Muestreo%20de%20se%F1ales%20continuas.pdf?version=2021">3.- Muestreo de señales continuas</a> (PDF 434Kb).</li>
+									<li class="texto"><a href="Descargas/4&#32;-&#32;Sensores.pdf">4.- Sensores</a> (PDF 798Kb).</li>
+									<li class="texto"><a href="Descargas/5&#32;-&#32;Transformada&#32;de&#32;Fourier.pdf">5.- Transformada de Fourier</a> (PDF 655Kb).</li>
+                                </ul>
+                                            
+						</td>
+					    </tr>
+                  <tr class="restoinfo">
+						<td><p class="texto">Documentación Accionamientos y Procesamiento de señal:</p>
+								<ul class="listapuntos">
+									<li class="texto">Toda la documentación está disponible en el Campus Virtual: <a href="https://www.campusvirtual.uniovi.es/mod/folder/view.php?id=346810">Implementación de Sistemas de Control (Máster en Ingeniería Mecatrónica) --> General --> Materiales Fernando</li>
+                        </ul>
+                                            
+						</td>
+					    </tr>
+
+                                  
+                                            </tbody>
+									</table-->
+                                     <p>
+                                        &nbsp;</p>
+                   <p>
+                        &nbsp;</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </td> </tr>
+    <tr>
+        <td colspan="2">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+                               <!--  INICIO PIE DE PAGINA -->
+                    <table bgcolor="#81996f" border="0" cellpadding="0" cellspacing="0" height="15" width="942">
+                        <tbody>
+                            <tr align="left" height="15">
+                                <td align="center" bgcolor="#81996f" width="100%">
+                                    <font color="white"><font face="Arial, Helvetica, sans-serif" size="2">©2012 Universidad
+                                        de Oviedo</font> </font>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--  FIN PIE DE PAGINA -->
+ 
+        </td>
+    </tr>
+    </tbody> </table>
+</body>
+</html>
