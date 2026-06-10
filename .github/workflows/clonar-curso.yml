@@ -1,0 +1,59 @@
+# Workflow para clonar la web del curso de Mecatrónica dentro de este repo.
+# Material de I. Álvarez (Universidad de Oviedo), incluido con permiso del autor.
+#
+# Cómo usarlo:
+#   1. Guarda este archivo en el repo como: .github/workflows/clonar-curso.yml
+#   2. Ve a la pestaña "Actions" del repo y ejecuta "Clonar curso Mecatronica"
+#   3. El material aparecerá en docs/curso-mecatronica
+
+name: Clonar curso Mecatronica
+
+on:
+  workflow_dispatch:   # se lanza manualmente desde la pestaña Actions
+
+permissions:
+  contents: write      # permite al workflow hacer commit y push en este repo
+
+jobs:
+  clonar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repo
+        uses: actions/checkout@v4
+
+      - name: Descargar la web del curso
+        run: |
+          mkdir -p docs/curso-mecatronica
+          cd docs/curso-mecatronica
+          # -r -l 3 : sigue enlaces hasta 3 niveles
+          # -p      : descarga imágenes y estilos de cada página
+          # -k      : reescribe los enlaces para que funcionen en local
+          # -E      : renombra .shtml -> .shtml.html (los abre cualquier navegador)
+          # -nH --cut-dirs=1 : quita el prefijo isa.uniovi.es/~ialvarez de las rutas
+          # -I      : limita la descarga a las carpetas del curso (los PDFs de
+          #           prácticas y transparencias viven fuera de C1..C3)
+          wget -r -l 3 -p -k -E -nH --cut-dirs=1 \
+            --restrict-file-names=windows \
+            -e robots=off --no-verbose --tries=3 --timeout=30 \
+            -I '/~ialvarez/Curso/Mecatronica,/~ialvarez/Curso/descargas,/~ialvarez/Curso/infindycom,/~ialvarez/Curso/imagenes,/~ialvarez/imagenes,/~ialvarez/Descargas' \
+            "http://isa.uniovi.es/~ialvarez/Curso/Mecatronica/C1-CyP/index.shtml" \
+            "http://isa.uniovi.es/~ialvarez/Curso/Mecatronica/C2-DPM/index.shtml" \
+            "http://isa.uniovi.es/~ialvarez/Curso/Mecatronica/C3-ISC/index.shtml" \
+            "http://isa.uniovi.es/~ialvarez/Curso/Mecatronica/C3-CyS/index.shtml" \
+            || true
+          # (|| true: si algún enlace antiguo da 404, el resto se guarda igualmente)
+
+      - name: Resumen de lo descargado
+        run: |
+          echo "Total de archivos descargados:"
+          find docs/curso-mecatronica -type f | wc -l
+          echo "Tamaño total:"
+          du -sh docs/curso-mecatronica
+
+      - name: Guardar en el repo (commit y push)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/curso-mecatronica
+          git commit -m "Clon de la web del curso de Mecatrónica (con permiso del autor)" || echo "Nada nuevo que guardar"
+          git push
